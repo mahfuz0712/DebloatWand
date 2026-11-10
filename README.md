@@ -1,11 +1,17 @@
-# DebloatWand (C++ Win32, ADB, no root)
+# DebloatWand - MUX HUD (Windows, ADB, no root)
 
-Build (MSYS2 UCRT64): `pacman -S --needed mingw-w64-ucrt-x86_64-toolchain make` then `make` -> `dist/DebloatWand.exe`.
-Put `adb.exe` (+ AdbWinApi.dll, AdbWinUsbApi.dll from Android platform-tools) next to the exe, or have adb in PATH.
+Build (MSYS2 UCRT64): `pacman -S --needed mingw-w64-ucrt-x86_64-toolchain make`, then `make` -> `dist/DebloatWand.exe`.
+Put `adb.exe` + `AdbWinApi.dll` + `AdbWinUsbApi.dll` (Android platform-tools) next to the exe, or have adb in PATH.
 
-Use: enable USB debugging on the phone, connect, accept the prompt, Refresh devices -> Load packages ->
-tick apps -> Remove ticked. Restore ticked brings them back. Export removed list saves names to a txt file.
+Sections
+- DEVICE INFO: model, Android, patch, bootloader lock, verified boot / verity, system-as-root, dynamic partitions, A/B, RAM, screen, battery, storage, root status.
+- APPS LIST: every package with TYPE / STATE / CLASS (SAFE or RISKY) / NEEDS/BY counts. Click a row for the detail panel:
+  what the app needs, which installed apps need it (shared UID, uses-library, Google Play services chain) and a note.
+  Filters: ALL / SAFE / RISKY / REMOVED, SYSTEM / USER toggles, search box, PRESET (common bloat), CLEAR.
+- INSTALL APK: pick one or many .apk files, or drag & drop them on the window. `-g` grants all permissions, `-d` allows downgrade.
 
-Method: `pm uninstall -k --user 0 <pkg>` / `pm install-existing --user 0 <pkg>`.
-Without root this hides/disables the app for user 0 only: the APK stays in /system, so free storage does NOT grow.
-A factory reset restores everything. Packages marked RISKY ask for confirmation.
+Removing a package that other installed apps still need, or a RISKY one, shows a warning first.
+Without root, a SYSTEM app is only hidden for user 0 (`pm uninstall -k --user 0`), storage is not freed; RESTORE TICKED undoes it
+(`pm install-existing`). USER apps are fully uninstalled.
+
+Layout: src/ (main.cpp = HUD GUI, adb.cpp = adb + dependency parser), build/, dist/.

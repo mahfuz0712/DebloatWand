@@ -8,7 +8,7 @@ CXX      := g++
 WINDRES  := windres
 CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -DUNICODE -D_UNICODE -D_WIN32_WINNT=0x0A00 -DWINVER=0x0A00 -MMD -MP
 LDFLAGS  := -static -static-libgcc -static-libstdc++ -mwindows -municode -s
-LDLIBS   := -lcomctl32 -lcomdlg32 -lshell32
+LDLIBS   := -lcomctl32 -lcomdlg32 -lshell32 -lgdi32 -luxtheme
 
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS := $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS)) $(OBJ_DIR)/resource.o
